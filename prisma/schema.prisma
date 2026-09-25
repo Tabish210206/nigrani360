@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      String   // PMU_MANAGER, INSPECTOR, etc.
+  geography String   // National, State, District...
+  password  String   @default("password") // Demo default
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  inspections   Inspection[]
+  assignments   Assignment[]
+  auditEvents   AuditEvent[]
+  notifications Notification[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  projectId   String   @unique // e.g., MH-042
+  name        String
+  type        String
+  state       String
+  district    String
+  block       String
+  latitude    Float
+  longitude   Float
+  riskScore   Int      @default(0)
+  riskLevel   String   @default("low")
+  
+  ngoId       String
+  ngo         NGO      @relation(fields: [ngoId], references: [id])
+  
+  cctvStatus  String   @default("live")
+  
+  // Relations
+  cctvs             CCTVDevice[]
+  signals           RiskSignal[]
+  inspections       Inspection[]
+  assignments       Assignment[]
+  complaints        Complaint[]
+  funds             Grant[]
+  assets            Asset[]
+  correctiveActions CorrectiveAction[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model NGO {
+  id        String   @id @default(uuid())
+  name      String
+  projects  Project[]
+}
+
+model CCTVDevice {
+  id          String   @id @default(uuid())
+  cameraId    String   @unique // e.g., CAM-HOSP-01
+  name        String
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  status      String   @default("live")
+  image       String
+  uptime      Float    @default(99.9)
+  outageHours Int      @default(0)
+}
+
+model RiskSignal {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  signal      String
+  score       Int
+  createdAt   DateTime @default(now())
+}
+
+model Inspection {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  inspectorId String
+  inspector   User     @relation(fields: [inspectorId], references: [id])
+  status      String
+  compliance  String
+  date        DateTime @default(now())
+}
+
+model Assignment {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  inspectorId String
+  inspector   User     @relation(fields: [inspectorId], references: [id])
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+}
+
+model Complaint {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  status      String   @default("new")
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model Grant {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  amount      Float
+  utilised    String
+  flagged     String   @default("None")
+}
+
+model Asset {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  name        String
+  status      String
+}
+
+model CorrectiveAction {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  action      String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+}
+
+model AuditEvent {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  action      String
+  target      String
+  timestamp   DateTime @default(now())
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  title       String
+  message     String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model ActivityEvent {
+  id          String   @id @default(uuid())
+  text        String
+  type        String
+  timestamp   DateTime @default(now())
+}

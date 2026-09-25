@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-saffron: #D97706; /* Refined amber/saffron */
+  --color-india-green: #059669; /* Refined emerald/green */
+  --color-navy: #0F172A; /* Deep slate */
+  --color-charcoal: #0B0F19; /* High-end dark */
+  --color-off-white: #F8FAFC; /* Premium background */
+  --color-panel: #FFFFFF;
+  --color-border: #E2E8F0;
+  
+  --font-sans: "Inter", system-ui, sans-serif;
+  
+  --shadow-premium: 0 4px 24px -4px rgba(15, 23, 42, 0.06), 0 0 1px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 12px 32px -4px rgba(15, 23, 42, 0.1), 0 0 1px rgba(15, 23, 42, 0.08);
+  --radius-premium: 12px;
+}
+
+@layer base {
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    background-color: var(--color-off-white);
+    color: var(--color-charcoal);
+    letter-spacing: -0.01em;
+  }
+  
+  /* Leaflet custom overrides for premium feel */
+  .leaflet-container {
+    font-family: inherit;
+    background: #0f172a !important; /* dark background behind tiles */
+  }
+  .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    padding: 0;
+  }
+  .leaflet-popup-content {
+    margin: 0;
+    line-height: 1.4;
+  }
+  .leaflet-popup-tip {
+    box-shadow: none;
+  }
+}
+
+@layer utilities {
+  .grainy-overlay {
+    position: relative;
+  }
+  .grainy-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.12'/%3E%3C/svg%3E");
+    z-index: 10;
+    mix-blend-mode: overlay;
+  }
+  
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+}
