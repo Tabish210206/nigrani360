@@ -87,7 +87,7 @@ async function main() {
     }
   });
 
-  // Additional static seed...
+  // MH-112
   const p3 = await prisma.project.create({
     data: {
       projectId: 'MH-112', name: 'Govt School, Main Block', type: 'School',
@@ -107,6 +107,7 @@ async function main() {
     }
   });
 
+  // GJ-021
   const p4 = await prisma.project.create({
     data: {
       projectId: 'GJ-021', name: 'Central Records Office', type: 'Govt Office',
@@ -126,6 +127,7 @@ async function main() {
     }
   });
 
+  // RJ-044
   const p5 = await prisma.project.create({
     data: {
       projectId: 'RJ-044', name: 'State Facility Entrance', type: 'Entrance',
@@ -148,6 +150,7 @@ async function main() {
     }
   });
 
+  // MH-155
   const p6 = await prisma.project.create({
     data: {
       projectId: 'MH-155', name: 'Regional Asset Storage', type: 'Storage',

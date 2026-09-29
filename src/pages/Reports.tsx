@@ -14,7 +14,7 @@ export default function Reports() {
   ];
 
   return (
-    <div className="p-6 max-w-[1920px] mx-auto bg-[#F4F6F8] min-h-[calc(100vh-56px)]">
+    <div className="p-4 sm:p-6 max-w-[1920px] mx-auto bg-[#F4F6F8] w-full">
       <div className="flex justify-between items-end mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">

@@ -5,7 +5,7 @@ export default function PremiumDataModule({ title, description, kpis, columns, d
   const [search, setSearch] = useState('');
   
   return (
-    <div className="p-6 max-w-[1920px] mx-auto space-y-6 bg-[#F4F6F8] min-h-[calc(100vh-56px)]">
+    <div className="p-4 sm:p-6 max-w-[1920px] mx-auto space-y-6 bg-[#F4F6F8] w-full">
       
       {/* Header */}
       <div className="flex justify-between items-end">

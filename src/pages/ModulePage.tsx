@@ -29,7 +29,7 @@ export default function ModulePage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-[#F4F6F8] min-h-[calc(100vh-56px)]">
+      <div className="flex-1 flex items-center justify-center bg-[#F4F6F8] p-12">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
           <p className="text-sm font-bold text-gray-500 uppercase tracking-widest animate-pulse">Loading {path}...</p>
