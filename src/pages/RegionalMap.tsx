@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { 
   Map as MapIcon, ChevronDown, ChevronUp, ChevronRight, X, 
@@ -109,51 +109,8 @@ const MAP_SITES: SiteData[] = [
   }
 ];
 
-// Helper to create teardrop pin icon with white dot & city tag
-const createPinIcon = (color: string, label?: string, isPulse?: boolean) => L.divIcon({
-  className: 'custom-map-pin',
-  html: `
-    <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-      ${isPulse ? `
-        <div style="position: absolute; width: 44px; height: 44px; top: -6px; left: -6px; border-radius: 50%; background: ${color}33; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-        <div style="position: absolute; width: 56px; height: 56px; top: -12px; left: -12px; border-radius: 50%; background: ${color}1a;"></div>
-      ` : ''}
-      <div style="
-        width: 32px; 
-        height: 32px; 
-        background: ${color}; 
-        border-radius: 50% 50% 50% 0; 
-        transform: rotate(-45deg); 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.32); 
-        border: 2.5px solid white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <div style="width: 10px; height: 10px; background: white; border-radius: 50%;"></div>
-      </div>
-      ${label ? `
-        <div style="
-          margin-top: 4px;
-          background: rgba(255,255,255,0.95);
-          backdrop-filter: blur(4px);
-          padding: 2px 7px;
-          border-radius: 6px;
-          border: 1px solid rgba(0,0,0,0.08);
-          font-weight: 800;
-          font-size: 11px;
-          color: #0f172a;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-          white-space: nowrap;
-        ">
-          ${label}
-        </div>
-      ` : ''}
-    </div>
-  `,
-  iconSize: [32, 50],
-  iconAnchor: [16, 32]
-});
+// createPinIcon is defined inside the component to prevent calling L.divIcon at module scope.
+
 
 // Standalone safe map controls that take map instance prop
 function CustomMapControls({ map }: { map: L.Map | null }) {
@@ -227,6 +184,53 @@ export default function RegionalMap() {
     };
   }, [map, selectedSite]);
 
+  const createPinIcon = useCallback((color: string, label?: string, isPulse?: boolean) => {
+    return L.divIcon({
+      className: 'custom-map-pin',
+      html: `
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+          ${isPulse ? `
+            <div style="position: absolute; width: 44px; height: 44px; top: -6px; left: -6px; border-radius: 50%; background: ${color}33; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="position: absolute; width: 56px; height: 56px; top: -12px; left: -12px; border-radius: 50%; background: ${color}1a;"></div>
+          ` : ''}
+          <div style="
+            width: 32px; 
+            height: 32px; 
+            background: ${color}; 
+            border-radius: 50% 50% 50% 0; 
+            transform: rotate(-45deg); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.32); 
+            border: 2.5px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <div style="width: 10px; height: 10px; background: white; border-radius: 50%;"></div>
+          </div>
+          ${label ? `
+            <div style="
+              margin-top: 4px;
+              background: rgba(255,255,255,0.95);
+              backdrop-filter: blur(4px);
+              padding: 2px 7px;
+              border-radius: 6px;
+              border: 1px solid rgba(0,0,0,0.08);
+              font-weight: 800;
+              font-size: 11px;
+              color: #0f172a;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+              white-space: nowrap;
+            ">
+              ${label}
+            </div>
+          ` : ''}
+        </div>
+      `,
+      iconSize: [32, 50],
+      iconAnchor: [16, 32]
+    });
+  }, []);
+
   const pinIcons = useMemo(() => ({
     high: createPinIcon('#E11D48', 'Mumbai', true),
     attention_nashik: createPinIcon('#F59E0B', 'Nashik'),
@@ -234,7 +238,7 @@ export default function RegionalMap() {
     healthy_pune: createPinIcon('#10B981', 'Pune'),
     healthy_nagpur: createPinIcon('#10B981', 'Nagpur'),
     offline: createPinIcon('#64748B'),
-  }), []);
+  }), [createPinIcon]);
 
   return (
     <div className="relative w-full h-full overflow-hidden font-sans select-none bg-[#F8FAFC]">

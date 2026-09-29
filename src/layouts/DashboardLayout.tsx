@@ -355,10 +355,24 @@ export default function DashboardLayout() {
               </div>
             </div>
           ))}
+
+          {/* Quick Logout inside drawer list for easy reach on mobile */}
+          <div className="pt-2 border-t border-slate-100">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                logout();
+              }}
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold text-rose-600 bg-rose-50/70 hover:bg-rose-100 border border-rose-100 transition-all cursor-pointer shadow-xs"
+            >
+              <LogOut className="w-4.5 h-4.5 text-rose-600" strokeWidth={2.2} />
+              <span>Log Out</span>
+            </button>
+          </div>
         </div>
 
-        {/* Settings & Logout (Bottom of Mobile Drawer) */}
-        <div className="p-4 border-t border-slate-100 space-y-1 bg-slate-50/50">
+        {/* Settings & Logout (Bottom Footer of Mobile Drawer) */}
+        <div className="p-4 border-t border-slate-100 space-y-2 bg-slate-50/80">
           <Link
             to="/demo"
             onClick={() => setMobileMenuOpen(false)}
@@ -373,10 +387,10 @@ export default function DashboardLayout() {
               setMobileMenuOpen(false);
               logout();
             }}
-            className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-[14px] font-semibold text-rose-600 hover:bg-rose-50 transition-all cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[14px] font-bold text-white bg-rose-600 hover:bg-rose-700 transition-all shadow-sm cursor-pointer"
           >
-            <LogOut className="w-5 h-5 text-rose-500" strokeWidth={1.9} />
-            <span>Logout</span>
+            <LogOut className="w-4.5 h-4.5 text-white" strokeWidth={2.2} />
+            <span>Secure Log Out</span>
           </button>
         </div>
       </div>
@@ -598,13 +612,13 @@ export default function DashboardLayout() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white" />
             </button>
 
-            {/* Desktop Quick Logout Button */}
+            {/* Quick Logout Button */}
             <button 
               onClick={() => logout()}
               title="Secure Logout"
-              className="hidden md:flex p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors rounded-xl cursor-pointer"
+              className="flex p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors rounded-xl cursor-pointer"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-4 h-4 text-slate-500 hover:text-rose-600" />
             </button>
 
             <div className="h-6 w-[1px] bg-slate-200 hidden md:block" />
@@ -646,7 +660,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* PAGE CONTENT ROUTED (Safe bottom padding on mobile for fixed bottom nav bar) */}
-        <div className={`flex-1 ${location.pathname === '/map' ? 'overflow-hidden' : 'overflow-y-auto custom-scrollbar pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))] md:pb-0'}`}>
+        <div className={`flex-1 ${location.pathname === '/map' ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden custom-scrollbar pb-24 md:pb-12'}`}>
           <Outlet />
         </div>
 

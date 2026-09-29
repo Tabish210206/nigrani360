@@ -67,8 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       console.warn('[AuthContext] Failed to load saved auth user:', e);
     }
-    // Default to PMU_DIRECTOR so the dashboard is immediately accessible
-    return ROLE_PROFILES.PMU_DIRECTOR;
+    // No saved session — user must go through the login flow
+    return null;
   });
 
   const login = (role: UserRole) => {

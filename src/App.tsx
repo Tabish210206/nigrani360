@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
+import RoleLoginPage from './pages/RoleLoginPage';
 import Overview from './pages/Overview';
 import SiteDetail from './pages/SiteDetail';
 import DashboardLayout from './layouts/DashboardLayout';
@@ -48,6 +49,7 @@ function App() {
       <Routes>
         {/* Public Login */}
         <Route path="/login" element={<Login />} />
+        <Route path="/login/:role" element={<RoleLoginPage />} />
 
         {/* Protected Dashboard Shell */}
         <Route path="/" element={<DashboardLayout />}>

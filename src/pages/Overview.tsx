@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { 
@@ -6,7 +6,7 @@ import {
   AlertTriangle, Video, ShieldAlert, BarChart2,
   WifiOff, MapPin, Compass, Maximize2, Plus, Minus,
   BookmarkCheck, Clock, X, Map as MapIcon, Loader2,
-  Building2, Home
+  Building2, Home, Navigation
 } from 'lucide-react';
 import L from 'leaflet';
 import CCTVViewer from '../components/CCTVViewer';
@@ -133,51 +133,8 @@ const OVERVIEW_MAP_SITES: SiteData[] = [
   }
 ];
 
-// Helper to create teardrop pin icon with white dot & city tag
-const createPinIcon = (color: string, label?: string, isPulse?: boolean) => L.divIcon({
-  className: 'custom-map-pin',
-  html: `
-    <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-      ${isPulse ? `
-        <div style="position: absolute; width: 44px; height: 44px; top: -6px; left: -6px; border-radius: 50%; background: ${color}33; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-        <div style="position: absolute; width: 56px; height: 56px; top: -12px; left: -12px; border-radius: 50%; background: ${color}1a;"></div>
-      ` : ''}
-      <div style="
-        width: 30px; 
-        height: 30px; 
-        background: ${color}; 
-        border-radius: 50% 50% 50% 0; 
-        transform: rotate(-45deg); 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-        border: 2px solid white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <div style="width: 9px; height: 9px; background: white; border-radius: 50%;"></div>
-      </div>
-      ${label ? `
-        <div style="
-          margin-top: 3px;
-          background: rgba(255,255,255,0.95);
-          backdrop-filter: blur(4px);
-          padding: 1.5px 6px;
-          border-radius: 5px;
-          border: 1px solid rgba(0,0,0,0.08);
-          font-weight: 800;
-          font-size: 10px;
-          color: #0f172a;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-          white-space: nowrap;
-        ">
-          ${label}
-        </div>
-      ` : ''}
-    </div>
-  `,
-  iconSize: [30, 48],
-  iconAnchor: [15, 30]
-});
+// createPinIcon is defined inside the component to avoid calling L.divIcon at module scope
+// (causes 'Illegal constructor' in Vite + React StrictMode).
 
 // Standalone safe map controls that take map instance prop
 function OverviewMapControls({ map }: { map: L.Map | null }) {
@@ -249,6 +206,54 @@ export default function Overview() {
     return () => clearTimeout(t);
   }, [overviewMap]);
 
+  const createPinIcon = useCallback((color: string, label?: string, isPulse?: boolean) => {
+    return L.divIcon({
+      className: 'custom-map-pin',
+      html: `
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+          ${isPulse ? `
+            <div style="position: absolute; width: 44px; height: 44px; top: -6px; left: -6px; border-radius: 50%; background: ${color}33; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="position: absolute; width: 56px; height: 56px; top: -12px; left: -12px; border-radius: 50%; background: ${color}1a;"></div>
+          ` : ''}
+          <div style="
+            width: 30px; 
+            height: 30px; 
+            background: ${color}; 
+            border-radius: 50% 50% 50% 0; 
+            transform: rotate(-45deg); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <div style="width: 9px; height: 9px; background: white; border-radius: 50%;"></div>
+          </div>
+          ${label ? `
+            <div style="
+              margin-top: 3px;
+              background: rgba(255,255,255,0.95);
+              backdrop-filter: blur(4px);
+              padding: 1.5px 6px;
+              border-radius: 5px;
+              border: 1px solid rgba(0,0,0,0.08);
+              font-weight: 800;
+              font-size: 10px;
+              color: #0f172a;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+              white-space: nowrap;
+            ">
+              ${label}
+            </div>
+          ` : ''}
+        </div>
+      `,
+      iconSize: [32, 42],
+      iconAnchor: [16, 42],
+      popupAnchor: [0, -42],
+    });
+  }, []);
+
   const pinIcons = useMemo(() => ({
     high: createPinIcon('#E11D48', 'Mumbai', true),
     attention_nashik: createPinIcon('#F59E0B', 'Nashik'),
@@ -256,7 +261,7 @@ export default function Overview() {
     healthy_pune: createPinIcon('#10B981', 'Pune'),
     healthy_nagpur: createPinIcon('#10B981', 'Nagpur'),
     offline: createPinIcon('#64748B'),
-  }), []);
+  }), [createPinIcon]);
 
   const loadData = async () => {
     try {
@@ -310,13 +315,7 @@ export default function Overview() {
   return (
     <div className="p-3 sm:p-5 max-w-[1920px] mx-auto space-y-3.5 sm:space-y-5 flex flex-col w-full bg-[#F8FAFC]">
       
-      {/* Offline / Mock Data Banner */}
-      {apiOffline && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-xs font-semibold text-amber-800 shadow-sm shrink-0">
-          <WifiOff className="w-4 h-4 text-amber-600 shrink-0" />
-          <span>Backend service unavailable — displaying demo data. Start the backend server (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">npm run dev:backend</code>) for live data.</span>
-        </div>
-      )}
+
 
       {/* MOBILE GREETING CARD */}
       <div className="md:hidden bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between">
