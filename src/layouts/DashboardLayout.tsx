@@ -667,7 +667,7 @@ export default function DashboardLayout() {
         {/* MOBILE FIXED BOTTOM NAVIGATION BAR */}
         <nav 
           aria-label="Mobile Navigation"
-          className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-1 py-0.5 pb-[calc(0.1rem+env(safe-area-inset-bottom,0px))] flex items-center justify-around shadow-[0_-2px_10px_rgba(0,0,0,0.04)] min-h-[36px]"
+          className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-2 py-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] flex items-center justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.06)] min-h-[56px]"
         >
           {bottomNavTabs.map((tab) => {
             const Icon = tab.icon;
@@ -678,20 +678,20 @@ export default function DashboardLayout() {
                 <button
                   key={tab.id}
                   onClick={tab.onClick}
-                  className={`flex flex-col items-center justify-center flex-1 py-0.5 transition-colors cursor-pointer active:scale-95 ${
-                    active ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'
+                  className={`flex flex-col items-center justify-center flex-1 py-1 transition-all cursor-pointer active:scale-95 ${
+                    active ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'
                   }`}
                 >
                   <div className="relative flex items-center justify-center">
                     <Icon 
-                      className={`w-3.5 h-3.5 transition-transform ${active ? 'text-blue-600 scale-105' : 'text-slate-500'}`} 
-                      strokeWidth={active ? 2.4 : 1.8} 
+                      className={`w-5 h-5 transition-transform ${active ? 'text-blue-600 scale-110' : 'text-slate-500'}`} 
+                      strokeWidth={active ? 2.3 : 1.8} 
                     />
                     {active && (
-                      <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-600" />
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-600" />
                     )}
                   </div>
-                  <span className={`text-[7.5px] mt-0.5 leading-none tracking-tight whitespace-nowrap transition-colors ${active ? 'font-bold text-blue-600' : 'font-medium text-slate-500'}`}>
+                  <span className={`text-[10px] mt-1 leading-none tracking-tight whitespace-nowrap transition-colors ${active ? 'text-blue-600 font-bold' : 'text-slate-500'}`}>
                     {tab.name}
                   </span>
                 </button>
@@ -705,23 +705,23 @@ export default function DashboardLayout() {
                 className="flex-1 flex flex-col items-center justify-center"
               >
                 <div
-                  className={`flex flex-col items-center justify-center w-full py-0.5 transition-colors active:scale-95 ${
-                    active ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'
+                  className={`flex flex-col items-center justify-center w-full py-1 transition-all active:scale-95 ${
+                    active ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium'
                   }`}
                 >
                   <div className="relative flex items-center justify-center">
                     <Icon 
-                      className={`w-3.5 h-3.5 transition-transform ${active ? 'text-blue-600 scale-105' : 'text-slate-500'}`} 
-                      strokeWidth={active ? 2.4 : 1.8} 
+                      className={`w-5 h-5 transition-transform ${active ? 'text-blue-600 scale-110' : 'text-slate-500'}`} 
+                      strokeWidth={active ? 2.3 : 1.8} 
                     />
                     {tab.badge && (
-                      <span className="absolute -top-0.5 -right-1 w-1.5 h-1.5 bg-rose-500 rounded-full ring-1 ring-white" />
+                      <span className="absolute -top-1 -right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white" />
                     )}
                     {active && (
-                      <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-600" />
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-600" />
                     )}
                   </div>
-                  <span className={`text-[7.5px] mt-0.5 leading-none tracking-tight whitespace-nowrap transition-colors ${active ? 'font-bold text-blue-600' : 'font-medium text-slate-500'}`}>
+                  <span className={`text-[10px] mt-1 leading-none tracking-tight whitespace-nowrap transition-colors ${active ? 'text-blue-600 font-bold' : 'text-slate-500'}`}>
                     {tab.name}
                   </span>
                 </div>
