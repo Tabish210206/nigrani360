@@ -55,21 +55,8 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.role && ROLE_PROFILES[parsed.role as NonNullable<UserRole>]) {
-          return ROLE_PROFILES[parsed.role as NonNullable<UserRole>];
-        }
-      }
-    } catch (e) {
-      console.warn('[AuthContext] Failed to load saved auth user:', e);
-    }
-    // No saved session — user must go through the login flow
-    return null;
-  });
+  // Always start unauthenticated — first page is always Login
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   const login = (role: UserRole) => {
     if (!role) return;
